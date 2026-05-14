@@ -1,0 +1,15 @@
+.idea/
+.venv/
+.go/
+
+*.py[cod]
+
+__pycache__/
+.pytest_cache/
+*.egg-info/
+
+build/
+dist/
+
+.tool-versions
+uv.lock
