@@ -166,6 +166,18 @@ def copy_resources(source: Source, output_root: Path, target: str) -> list[Path]
     return written
 
 
+def copy_licenses(source: Source, output_root: Path) -> list[Path]:
+    written: list[Path] = []
+    for src in sorted(source.root.glob("LICENSE*")):
+        if not src.is_file():
+            continue
+        dest = output_root / src.name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dest)
+        written.append(dest)
+    return written
+
+
 def include_sources(output_root: Path, packages: list[ResolvedPackage]) -> list[Path]:
     written: list[Path] = []
 

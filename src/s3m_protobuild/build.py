@@ -11,6 +11,7 @@ from .model import (
     Source,
 )
 from .output import (
+    copy_licenses,
     copy_resources,
     include_sources,
     prepare_output_root,
@@ -144,6 +145,7 @@ def _build_artifact(
     if target == "go":
         tool_env = require_go_tools(all_sources, env=tool_env)
         copy_resources(artifact.source, artifact.output_root, "go")
+        copy_licenses(artifact.source, artifact.output_root)
         generate_go(
             artifact.output_root,
             config,
@@ -184,6 +186,7 @@ def _build_artifact(
         raise BuildError(f"Unsupported target: {target}")
 
     copy_resources(artifact.source, artifact.output_root, target)
+    copy_licenses(artifact.source, artifact.output_root)
     ensure_python_packaging(artifact.output_root, dist_name, module_name, runtime_deps)
     write_version_module(artifact.output_root, module_name, config.version)
 
