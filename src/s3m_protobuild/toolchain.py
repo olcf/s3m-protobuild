@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from .errors import BuildError
-from .run import env_with_local_tools, log, run
+from .run import env_with_local_tools, log, make_go_toolchain_writable, run
 
 PYTHON_BUILD_DEPS = (
     "grpcio-tools==1.80.0",
@@ -93,6 +93,8 @@ def setup_local_tools(
 
         for tool in GO_BUILD_TOOLS:
             run(["go", "install", tool], env=env)
+
+        make_go_toolchain_writable(go_dir)
 
     _post_setup_notes(
         venv=venv if python else None,

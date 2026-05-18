@@ -167,6 +167,25 @@ def env_with_writable_go_cache(env: dict[str, str] | None = None) -> dict[str, s
     return result
 
 
+def make_go_toolchain_writable(go_dir: Path) -> None:
+    # -modcacherw only affects module downloads, not the extracted toolchain.
+    # Walk that subtree and re-add the owner write bit.
+    toolchain_root = go_dir / "pkg" / "mod" / "golang.org"
+    if not toolchain_root.exists():
+        return
+    for entry in toolchain_root.iterdir():
+        if not entry.name.startswith("toolchain@"):
+            continue
+        for root, dirs, files in os.walk(entry):
+            for name in dirs + files:
+                path = os.path.join(root, name)
+                try:
+                    mode = os.lstat(path).st_mode
+                    os.chmod(path, mode | 0o200)
+                except (FileNotFoundError, PermissionError):
+                    pass
+
+
 def env_with_local_tools(
     venv: Path | None = None,
     go_dir: Path | None = None,
