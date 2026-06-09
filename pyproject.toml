@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "s3m-protobuild"
-version = "0.1.0"
+version = "0.1.1"
 description = "Standalone builder for S3M protobuf API artifacts"
 readme = "README.md"
 requires-python = ">=3.9"
