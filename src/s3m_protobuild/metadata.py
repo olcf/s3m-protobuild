@@ -13,7 +13,7 @@ from .model import Artifact, Source
 from .output import BUILD_INFO_NAME
 from .run import run
 
-_TOOLING_TARGETS = frozenset({"go", "py", "pyb", "oas"})
+_TOOLING_TARGETS = frozenset({"go", "py", "pyb", "oas", "descriptor"})
 
 
 def write_build_info(
@@ -76,6 +76,9 @@ def _write_tooling_section(
     if not targets & _TOOLING_TARGETS:
         return
     _write_header(handle, "tooling")
+
+    if targets & {"oas", "descriptor"}:
+        _write_protoc_version(handle, tool_env=tool_env)
 
     if "oas" in targets:
         _write_oas_tool_versions(handle, tool_env=tool_env)
@@ -144,13 +147,15 @@ def _write_go_tool_versions(
             handle.write(f"tooling.go.module.{module}: {mod_version}\n")
 
 
-def _write_oas_tool_versions(handle: TextIO, tool_env: dict[str, str] | None) -> None:
+def _write_protoc_version(handle: TextIO, tool_env: dict[str, str] | None) -> None:
     protoc_version = _capture(
         handle, "tooling.protoc.version", ["protoc", "--version"], tool_env
     ).strip()
     if protoc_version:
         handle.write(f"tooling.protoc.version: {protoc_version}\n")
 
+
+def _write_oas_tool_versions(handle: TextIO, tool_env: dict[str, str] | None) -> None:
     oas_bin = shutil.which("protoc-gen-oas", path=(tool_env or {}).get("PATH"))
     if not oas_bin:
         handle.write(

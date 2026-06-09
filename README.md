@@ -2,7 +2,7 @@
 
 Generate Go and Python packages, OpenAPI specs, and `FileDescriptorSet` files from S3M protobuf source repositories.
 
-Builds one or more proto source repositories (each containing a `MODULE` file and a `proto/` tree), writing generated artifacts to the `--out` path. Use selectors to choose which packages and which output formats to produce.
+Builds one or more proto source repositories containing a `MODULE` file and a `proto/` tree. Use selectors to choose which packages and which output formats to produce.
 
 Targets:
 
@@ -11,7 +11,7 @@ Targets:
 - `pyb`: a [BetterProto](https://github.com/danielgtaylor/python-betterproto)-based Python package with a `setup.py`, suitable for `pip install`.
 - `oas`: an `openapi.yaml` rendered via `protoc-gen-oas`.
 
-`--descriptor-out` can be combined with any combination of targets to emit a protobuf `FileDescriptorSet` covering everything that was selected.
+`--descriptor-out` can be combined with any combination of targets to emit a protobuf `FileDescriptorSet` for everything selected.
 
 ---
 
@@ -43,7 +43,7 @@ s3m-protobuild build \
 
 The `setup` command provisions a Python environment in `.venv/`. The `build` command clones `github.com/olcf/s3m-apis` and generates a BetterProto Python package containing the `common`, `status`, and `streaming` proto packages at `./s3m-apis-pyb`.
 
-**Note:** `pyb` builds use `betterproto`, so client/server RPC calls are async. See [Why prefer `pyb`](#why-prefer-pyb-betterproto-over-py-grpcio) to understand the tradeoffs.
+**Note:** `pyb` builds use `betterproto`, so client/server RPC calls must be async. See [Why prefer `pyb`](#why-prefer-pyb-betterproto-over-py-grpcio) to understand the tradeoffs.
 
 ## Quickstart: build an S3M-APIs Go module
 
